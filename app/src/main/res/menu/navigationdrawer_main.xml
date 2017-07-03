@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-  
+  <item android:id="@+id/menu_user"
+    android:icon="@mipmap/ic_launcher_round"
+    android:title="@string/user"/>
+  <item android:id="@+id/menu_favorite"
+      android:icon="@mipmap/ic_launcher_round"
+      android:title="@string/favourite"/>
+  <item android:id="@+id/menu_setting"
+      android:icon="@mipmap/ic_launcher_round"
+      android:title="@string/setting"/>
+  <item android:id="@+id/menu_about_us"
+      android:icon="@mipmap/ic_launcher_round"
+      android:title="@string/about_us"/>
 </menu>

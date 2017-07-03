@@ -48,4 +48,79 @@
 2. title的位置比较固定,如果要自定义title的位置,可以在toolbar布局中加入自己的布局,并将actionbar设置为不显示title
 ```java
     getSupportActionBar().setDisplayShowTitleEnabled(false);
-```\
+```
+
+## DrawerLayout+NavigationView
+DrawerLayout+NavigationView 是官方提供的一套侧滑菜单的解决方案,其中NavigationView是边缘滑出的菜单
+### 引入
+DrawerLayout 一般作为Activity的根布局,主内容一般作为第一个子view,`NavigationView`作为最后一个.以实现在内容页上面显示的效果.如果需要使用`CoordinatorLayout+Toolbar`的组合,一般来说布局是这样的
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusableInTouchMode="true">
+  <android.support.design.widget.CoordinatorLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      tools:context="io.mopel.materialdesignstudy.MainActivity">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+      <include
+          android:id="@+id/app_bar"
+          layout="@layout/app_bar"/>
+    </android.support.design.widget.AppBarLayout>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+      <FrameLayout
+          android:id="@+id/content_main"
+          android:layout_width="368dp"
+          android:layout_height="495dp"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          tools:layout_editor_absoluteX="8dp">
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+        android:name="io.mopel.materialdesignstudy.NavigationFragment"/>
+          </FrameLayout>
+    </android.support.constraint.ConstraintLayout>
+  </android.support.design.widget.CoordinatorLayout>
+  <android.support.design.widget.NavigationView
+      android:id="@+id/navigation_view"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_gravity="start"
+      android:background="@android:color/white"
+      app:headerLayout="@layout/nav_header"
+      app:menu="@menu/navigationdrawer_main" />
+</android.support.v4.widget.DrawerLayout>
+```
+### 重要属性
+`NavigationView`的`headLayout`,`menu` 分别指的是侧滑菜单的上部和菜单栏
+要使菜单栏中的图标保持原图的颜色,设置方法如`navigationView.setItemIconTintList(null);`
+获取headLayout的方法是` drawerHeaderView = navigationView.getHeaderView(0);`
+获取menu的点击事件方法为`navigationView.setNavigationItemSelectedListener(this);`
+而想要使icon图标可点击切换侧滑菜单的显示与隐藏,则需要为其添加监听器,具体代码如下
+```java
+ ActionBarDrawerToggle actionBarDrawerToggle =
+        new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,
+            R.string.drawer_close){
+          @Override public void onDrawerOpened(View drawerView) {
+            super.onDrawerOpened(drawerView);
+          }
+
+          @Override public void onDrawerClosed(View drawerView) {
+            super.onDrawerClosed(drawerView);
+          }
+        };
+    drawerLayout.addDrawerListener(actionBarDrawerToggle);
+```
